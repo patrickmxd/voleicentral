@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Inscrição - Torneio de Vôlei</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(rgba(255, 236, 210, 0.7), rgba(255, 236, 210, 0.7)),
+        url('https://previews.123rf.com/images/sergofoto/sergofoto1306/sergofoto130600042/20244052-praia-uma-quadra-de-v%C3%B4lei-no-mar-ver%C3%A3o.jpg') no-repeat center center;
+      background-size: cover;
+      min-height: 100vh;
+      padding: 2rem;
+      color: #2c3e50;
+    }
+    .container {
+      max-width: 600px;
+      margin: auto;
+      background: #fff;
+      border-radius: 10px;
+      padding: 2rem;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    }
+    h1, h2 { text-align: center; margin-bottom: 1rem; }
+    label { display: block; margin-top: 1rem; font-weight: 600; }
+    input, button {
+      width: 100%;
+      padding: 0.75rem;
+      margin-top: 0.5rem;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+    }
+    button {
+      background-color: #e74c3c;
+      color: white;
+      border: none;
+      margin-top: 2rem;
+      cursor: pointer;
+    }
+    button:hover { background-color: #c0392b; }
+    .success, .error { text-align: center; margin-top: 1rem; font-weight: 600; }
+    .success { color: green; }
+    .error { color: red; }
+    .pix-section {
+      margin-top: 2rem;
+      background: #fefefe;
+      padding: 1.5rem;
+      border-radius: 10px;
+      text-align: center;
+    }
+    .pix-section img {
+      max-width: 200px;
+      margin: 1rem 0;
+    }
+    .code-box {
+      background: #f0f0f0;
+      padding: 1rem;
+      font-family: monospace;
+      word-break: break-all;
+      border: 1px dashed #999;
+      border-radius: 5px;
+    }
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1><i class="fas fa-volleyball-ball"></i> Torneio de Vôlei de Praia</h1>
+    <p style="text-align:center;">Preencha seus dados para se inscrever:</p>
+    <form id="inscricaoForm">
+      <label for="nome">Nome completo</label>
+      <input type="text" id="nome" required />
+
+      <label for="email">Email</label>
+      <input type="email" id="email" required />
+
+      <label for="telefone">Telefone</label>
+      <input type="tel" id="telefone" required />
+
+      <label for="habilidade">Nível de habilidade (1 a 10)</label>
+      <input type="range" id="habilidade" min="1" max="10" value="5" oninput="document.getElementById('nivel').textContent = this.value" />
+      <div style="text-align: center;">Nível: <span id="nivel">5</span></div>
+
+      <button type="submit">Enviar inscrição</button>
+    </form>
+
+    <div id="mensagem" class="success hidden"></div>
+
+    <div class="pix-section hidden" id="pix">
+      <h2><i class="fas fa-qrcode"></i> Pagamento via PIX</h2>
+      <p>Escaneie o QR Code abaixo:</p>
+      <img src="https://chart.googleapis.com/chart?chs=250x250&cht=qr&chl=00020126850014br.gov.bcb.pix01367ff0367e-27ec-49d9-b7bc-89ea595413c90223Inscricao%20Volei%20Central520400005303986540515.005802BR5923Andre%20Victor%20Figueiredo6008Brasilia62230519daqr2087454523015776304785E" alt="PIX QR Code" />
+      <p>Ou copie o código:</p>
+      <div class="code-box">00020126850014br.gov.bcb.pix01367ff0367e-27ec-49d9-b7bc-89ea595413c90223Inscricao Volei Central520400005303986540515.005802BR5923Andre Victor Figueiredo6008Brasilia62230519daqr2087454523015776304785E</div>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('inscricaoForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const formData = {
+        nome: document.getElementById('nome').value,
+        email: document.getElementById('email').value,
+        telefone: document.getElementById('telefone').value,
+        habilidade: document.getElementById('habilidade').value
+      };
+
+      fetch('https://script.google.com/macros/s/AKfycbw_35cuMIkMYggvAq7YA77DcEtQStRZxuPOtyJ7yGxCc_pQV7jPCaFrlRII6ENd_Nt3BQ/exec', {
+        method: 'POST',
+        body: JSON.stringify(formData),
+        headers: { 'Content-Type': 'application/json' }
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.status === 'sucesso') {
+          document.getElementById('mensagem').textContent = 'Inscrição enviada com sucesso!';
+          document.getElementById('mensagem').classList.remove('hidden');
+          document.getElementById('pix').classList.remove('hidden');
+          document.getElementById('inscricaoForm').reset();
+          document.getElementById('nivel').textContent = '5';
+        } else {
+          alert('Erro ao enviar. Tente novamente.');
+        }
+      })
+      .catch(() => alert('Erro de conexão.'));
+    });
+  </script>
+</body>
+</html>
